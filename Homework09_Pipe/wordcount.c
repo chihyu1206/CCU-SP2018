@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     // first child process
     if (pid1 == 0) {
         // close stdout
-        close(1);
+        close(STDOUT_FILENO);
         // copy pipefd to stdout
         dup(pipefd[1]);
         // close unused pipe
@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
         // second child process
         if (pid2 == 0) {
             // close stdin
-            close(0);
+            close(STDIN_FILENO);
             // copy pipefd to stdin
             dup(pipefd[0]);
             // close unused pipe
