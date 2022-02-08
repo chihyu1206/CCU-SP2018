@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
         if (feof(fin))
             break;
     }
-    // write to buffer
+    // flush the buffer
     fflush(fp);
     // write the fd's data retrived from fileno() (meta data is included) to disk from buffer	
     fsync(fileno(fp));
