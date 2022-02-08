@@ -19,10 +19,10 @@ int main(int argc, char *argv[])
     if (!(fout = fopen(argv[2], "w+")))
         perror("file open error");
 	
-	// make temp file
+    // make a temp file
     char tmp_fn[] = "/tmp/acp_XXXXXX";
     // the declared name's data type should be array of char, not pointer of char
-    // the end of filename should be XXXXXX for mkstemp
+    // the end of filename must be XXXXXX for mkstemp
     mkstemp(tmp_fn);
     if (!(fp = fopen(tmp_fn, "w+")))
         perror("file open error");
@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     }
     // write to buffer
     fflush(fp);
-    // write to disk from buffer	
+    // write the fd's data retrived from fileno() (meta data is included) to disk from buffer	
     fsync(fileno(fp));
 
     // pause	
