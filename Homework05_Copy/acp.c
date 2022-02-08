@@ -5,9 +5,14 @@
 
 const int BUF_SIZE = 4096;
 
-int main(int argc,char*argv[]){
+int main(int argc, char *argv[])
+{
     char buffer[BUF_SIZE];
     FILE *fp, *fin, *fout;
+    if (argc != 3) {
+        fprintf(stderr, "[usage]: ./acp.out src_file dstfile\n");
+        exit(-1);
+    }
     // open file 1, 2
     if (!(fin = fopen(argv[1], "r")))
         perror("file open error");
@@ -25,34 +30,34 @@ int main(int argc,char*argv[]){
     //copy fin's content to temp
     int ret = 0;
     while (1) {
-	    ret = fread(buffer, 1, BUF_SIZE, fin);
+        ret = fread(buffer, 1, BUF_SIZE, fin);
         ret = fwrite(buffer, 1, ret, fp);
         if (feof(fin))
             break;
-	}
-	// write to buffer
+    }
+    // write to buffer
     fflush(fp);
     // write to disk from buffer	
     fsync(fileno(fp));
 
     // pause	
     printf("Process is paused. Enter any single character to continue.\n");
-    char c=getchar();
+    char c = getchar();
 	
-    //copy temp to file2
+    // copy temp to file2
     // SEEK_SET: begin of file
     fseek(fp, 0, SEEK_SET);
-    while(1) {
-	    ret = fread(buffer, 1, BUF_SIZE, fp);
+    while (1) {
+        ret = fread(buffer, 1, BUF_SIZE, fp);
         ret = fwrite(buffer, 1, ret, fout);
         if (feof(fp))
             break;
-	}
+    }
 	
-	//remove temp file and close file pointer
+    //remove temp file and close file pointer
     remove(tmp_fn);
     fclose(fp);
     fclose(fin);
     fclose(fout);
-	return 0;
+    return 0;
 }
