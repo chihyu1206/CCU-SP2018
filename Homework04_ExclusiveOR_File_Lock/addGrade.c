@@ -12,7 +12,7 @@ int main()
 {
     char buffer[BUF_SIZE];
     int fd, ret, id, grade[5];
-    memset(grade, 0, sizeof(int) * 5);
+    memset(grade, 0, sizeof(grade));
     ssize_t numOut;
     /*
     O_WRONLY: Write only
@@ -23,13 +23,13 @@ int main()
     fd = open("grade.txt", O_WRONLY|O_APPEND|O_CREAT, S_IRUSR| S_IWUSR);	
     while (1) {
         // exclusive-or | non-blocking lock
-        if (flock(fd, LOCK_EX|LOCK_NB) == 0)
+        if (flock(fd, LOCK_EX | LOCK_NB) == 0)
             printf("Enter critical section\n");
         // input the data
         scanf("%d%d%d%d%d%d", &id, &grade[0], &grade[1], &grade[2], &grade[3], &grade[4]);
         // print to the buffer
-        sprintf(buffer,"%d %d %d %d %d %d\n",id, grade[0], grade[1], grade[2], grade[3], grade[4]);
-        if (fd == -1) {
+        sprintf(buffer, "%d %d %d %d %d %d\n", id, grade[0], grade[1], grade[2], grade[3], grade[4]);
+        if (fd < 0) {
             perror("File open failed"); 
             exit(-1);
 	}
