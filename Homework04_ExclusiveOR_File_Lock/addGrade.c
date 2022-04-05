@@ -23,25 +23,26 @@ int main()
     fd = open("grade.txt", O_WRONLY|O_APPEND|O_CREAT, S_IRUSR| S_IWUSR);	
     while (1) {
         // exclusive-or | non-blocking lock
-        if (flock(fd, LOCK_EX | LOCK_NB) == 0)
+        if (flock(fd, LOCK_EX | LOCK_NB) == 0) {
             printf("Enter critical section\n");
-        // input the data
-        scanf("%d%d%d%d%d%d", &id, &grade[0], &grade[1], &grade[2], &grade[3], &grade[4]);
-        // print to the buffer
-        sprintf(buffer, "%d %d %d %d %d %d\n", id, grade[0], grade[1], grade[2], grade[3], grade[4]);
-        if (fd < 0) {
-            perror("File open failed"); 
-            exit(-1);
-	}
-        if ((numOut = write(fd, buffer, strlen(buffer))) < 0) {
-            perror("Buffer write failed");
-            exit(-1);
+            // input the data
+            scanf("%d%d%d%d%d%d", &id, &grade[0], &grade[1], &grade[2], &grade[3], &grade[4]);
+            // print to the buffer
+            sprintf(buffer, "%d %d %d %d %d %d\n", id, grade[0], grade[1], grade[2], grade[3], grade[4]);
+            if (fd < 0) {
+                perror("File open failed"); 
+                exit(-1);
+            }
+            if ((numOut = write(fd, buffer, strlen(buffer))) < 0) {
+                perror("Buffer write failed");
+                exit(-1);
+            }
+            sleep(5);
+            printf("Exit critical section\n");
+            // unlock
+            flock(fd, LOCK_UN);
         }
-	sleep(5);
-	printf("Exit critical section\n");
-        // unlock
-        flock(fd, LOCK_UN);
-    }		
+    }
     close(fd);
     return 0;
 }
